@@ -23,8 +23,6 @@ std::vector<int> parallel_prefix_sum(std::vector<int>& vec) {
 }
 
 int main(int argc, char *argv[]) {
-  // bool verbose = std::string(argv[1]) == std::string("--verbose") ? true : false;
-
   int n = 50;
   int range = 5;
   std::vector<int> key(n);
@@ -42,12 +40,13 @@ int main(int argc, char *argv[]) {
 
   // discard offset variable, instead we use bucket_cumsum.
   // std::vector<int> offset(range,0);
+  // bucket_cumsum[t] = \sum_{u=0}^{t} bucket[u]
   std::vector<int> bucket_cumsum = parallel_prefix_sum(bucket);
 
 #pragma omp parallel for
   for (int i=0; i<range; i++) {
     // int j = offset[i];
-    int j = bucket_cumsum[i-1];
+    int j = i == 0 ? 0 : bucket_cumsum[i-1];
     for (int k = bucket[i]; k>0; k--)
       key[j++] = i;
   }
