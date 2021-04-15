@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <cassert>
 
 template<class T>
 void merge(std::vector<T>& vec, int begin, int mid, int end) {
@@ -43,6 +44,7 @@ int main() {
   printf("\n");
   merge_sort(vec, 0, n-1);
   for (int i=0; i<n; i++) {
+    if (i<n-1) assert(vec[i] <= vec[i+1]);
     printf("%d ",vec[i]);
   }
   printf("\n");
