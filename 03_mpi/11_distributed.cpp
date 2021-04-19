@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // 自ノードで計算する物体(=N体のうちN/size個だけ)のメモリのみを確保する．
+  // ibody: 自ノード担当分の物体，jbody: 隣接ノード担当分の物体，buffer: Read/Write競合回避用の作業領域
   Body ibody[N/size], jbody[N/size], buffer[N/size];
   srand48(rank);
   for(int i=0; i<N/size; i++) {
@@ -32,7 +33,7 @@ int main(int argc, char** argv) {
   MPI_Type_commit(&MPI_BODY);
   // 各プロセスのメモリ上に，ウィンドウと呼ばれる公開領域を設定
   MPI_Win win;
-  // jbody変数の領域をウィンドウに設定，jbodyひとつ分を通信単位とする．
+  // jbody変数の領域をウィンドウに設定，Body型ひとつ分を通信単位とする．
   MPI_Win_create(jbody, (N/size)*sizeof(Body), sizeof(Body), MPI_INFO_NULL, MPI_COMM_WORLD, &win);
   
   // 隣接ノードを取り替えながら，size回くりかえせば計算が完了する
