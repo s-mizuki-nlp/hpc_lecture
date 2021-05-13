@@ -2,6 +2,7 @@
 #include <cstdlib>
 
 __global__ void scan(int *a, int *b, int N) {
+  // 自分のthreadが担当する配列要素を，ブロック番号・スレッド番号を用いて特定
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   for(int j=1; j<N; j<<=1) {
     b[i] = a[i];
