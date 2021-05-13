@@ -9,6 +9,7 @@ __global__ void matmul(float *A, float *B, float *C, int N) {
   int j = threadIdx.x;
   float sum = 0;
   for (int k=0; k<N; k++) {
+    // 行方向にマルチスレッド計算
     sum += A[N*i+k] * B[N*k+j];
   }
   C[N*i+j] = sum;
